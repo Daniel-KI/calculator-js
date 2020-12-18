@@ -1,0 +1,58 @@
+@import url('https://fonts.googleapis.com/css2?family=Nunito:wght@300&display=swap');
+body{
+    padding: 0;
+    margin: 0;
+    background: linear-gradient(to right, #c51e5b, #ffe15c);
+    font-family: 'Nunito', sans-serif;
+}
+.calculator{
+    background-color: #f0f1f5;
+    width: 320px;
+    height: 500px;
+    margin: 0 auto;
+    position: relative;
+    top: 8vh;
+    border-radius: 2rem;
+    display: grid;
+    grid-template-columns: 1fr;
+    grid-template-rows: 1fr 2fr;
+    box-shadow: 0 0 80px rgba(0,0,0,0.5); /* Параметры тени */
+}
+.output{
+    margin: 0.7em;
+    border: 2px solid #52f7de;
+    border-radius: 2rem;
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-around;
+    flex-direction: column;
+    padding: 10px;
+    word-wrap: break-word;
+    word-break: break-all;
+    overflow: hidden;
+}
+.keyboard{
+    display: grid;
+    padding-bottom: 2em;
+    grid-template-columns: repeat(4,1fr);
+}
+.keyboard > button{
+    cursor: pointer;
+    outline: none;
+    border: 2px solid #f0f1f5;
+    font-size: 1em;
+    background-color: #ffffff;
+    transition: 0.5s linear;
+}
+.keyboard > button:hover{
+    border:0;
+    background-color: #5ecffc;
+    
+}
+
+.previous-operand{
+    font-size: 1.2rem;
+}
+.current-operand{
+    font-size: 2.2rem;
+}
