@@ -15,7 +15,7 @@ method updateDisplay() -> Display values on page
 */
 
 class Calculator {
-    
+
     constructor(previousOperandTextElement, currentOperandTextElement) {
         this.previousOperandTextElement = previousOperandTextElement;
         this.currentOperandTextElement = currentOperandTextElement;
@@ -39,15 +39,14 @@ class Calculator {
     }
 
     addNumber(number) {
-        if (number === '.' && this.currentOperand.includes('.')) return
+        if (number === '.' && this.currentOperand.includes('.')) return;
         this.currentOperand = this.currentOperand.toString() + number.toString();
     }
 
     chooseOperation(operation) {
         if (this.currentOperand === '' && this.operation !== '√' && this.operation != '1/x') {
-            return
+            return;
         }
-
         if (this.previousOperand !== '') {
             this.calculate();
         }
@@ -74,7 +73,7 @@ class Calculator {
         const previosVariable = parseFloat(this.previousOperand);
         const currentVaribale = parseFloat(this.currentOperand);
         if (isNaN(previosVariable) || (isNaN(currentVaribale) && this.operation != '1/x' &&
-            this.operation != '√')) return
+            this.operation != '√')) return;
         switch (this.operation) {
             case '+':
                 result = previosVariable + currentVaribale;
@@ -89,7 +88,7 @@ class Calculator {
                 result = previosVariable / currentVaribale;
                 break;
             case '%':
-                result = currentVaribale / previosVariable * 100;
+                result = currentVaribale * previosVariable / 100;
                 break;
             case '1/x':
                 result = 1 / previosVariable;
@@ -123,11 +122,13 @@ class Calculator {
                 this.previousOperandTextElement.innerText = `1/${this.previousOperand}`;
             else if (this.operation == '^x')
                 this.previousOperandTextElement.innerText = `${this.previousOperand}^`;
+            else if (this.operation == '%')
+                this.previousOperandTextElement.innerText = `percentage of the number ${this.previousOperand}`
             else
                 this.previousOperandTextElement.innerText = `${this.previousOperand} ${this.operation}`;
         }
         else {
-            this.previousOperandTextElement.innerText = ''
+            this.previousOperandTextElement.innerText = '';
         }
     }
 }

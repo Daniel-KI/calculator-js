@@ -1,15 +1,15 @@
-const numberButtons = document.querySelectorAll('[number]')
-const operationButtons = document.querySelectorAll('[operation]')
-const equalsButton = document.querySelector('[equals]')
+const numberButtons = document.querySelectorAll('[number]');
+const operationButtons = document.querySelectorAll('[operation]');
+const equalsButton = document.querySelector('[equals]');
 
-const deleteButton = document.querySelector('[delete]')
-const clearAllButton = document.querySelector('[clear-all]')
-const clearCurrentOperandButton = document.querySelector('[clear-current-operand]')
+const deleteButton = document.querySelector('[delete]');
+const clearAllButton = document.querySelector('[clear-all]');
+const clearCurrentOperandButton = document.querySelector('[clear-current-operand]');
 
-const signButton = document.querySelector('[sign]')
+const signButton = document.querySelector('[sign]');
 
-const previousOperandTextElement = document.querySelector('[previous-operand]')
-const currentOperandTextElement = document.querySelector('[current-operand]')
+const previousOperandTextElement = document.querySelector('[previous-operand]');
+const currentOperandTextElement = document.querySelector('[current-operand]');
 
 const calculator = new Calculator(previousOperandTextElement, currentOperandTextElement);
 
