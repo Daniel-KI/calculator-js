@@ -18,11 +18,11 @@ body{
     display: grid;
     grid-template-columns: 1fr;
     grid-template-rows: 1fr 2fr;
-    box-shadow: 0 0 80px rgba(0,0,0,0.5); /* Параметры тени */
+    box-shadow: 0 0 80px rgba(0,0,0,0.5);
 }
 .output{
     margin: 0.7em;
-    border: 2px solid #52f7de;
+    border: 2px solid #5ecffc;
     border-radius: 2rem;
     display: flex;
     align-items: flex-end;
