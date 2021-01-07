@@ -119,16 +119,6 @@ class Calculator {
                 this.result = Math.pow(previosVariable, currentVaribale);
                 break;
 
-            case '√':
-                this.result = Math.sqrt(currentVaribale);
-                return;
-            case '1/':
-                this.result = 1 / currentVaribale;
-                return;
-            case '%':
-                this.result = currentVaribale / 100;
-                return;
-
             default:
                 return;
         }
