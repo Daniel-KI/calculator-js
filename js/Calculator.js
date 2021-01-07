@@ -5,26 +5,41 @@ method clearCurrentOpertand() -> Clear last entered value
 method clear() -> Clear all entered values
 method delete() -> Delete last entered value
 
-method addNumber() -> Add number to display
-method chooseOperation() -> Check entered operation
+method addDot() -> Add dot to current value
+method addNumber() -> Add number to current value
+method chooseOperation() -> Check entered basic operation
 method changeSign() -> Change sign of entered value (+/-)
 
 method calculate() -> Calculate result
-method roundNumber() -> Solves problems with decimal numbers
+method roundNumber() -> Round result to chosen decimals (solves problems with decimal)
 method updateDisplay() -> Display values on page
 */
 
 class Calculator {
 
-    constructor(previousOperandTextElement, currentOperandTextElement) {
-        this.previousOperandTextElement = previousOperandTextElement;
-        this.currentOperandTextElement = currentOperandTextElement;
+    constructor() {
         this.resetStatus = false;
+        this.currentOperand = undefined;
+        this.previousOperand = undefined;
+        this.operation = undefined;
+        this.result = undefined;
+
+        this.listeners();
         this.clear();
+    }
+
+    roundNumber(number, decimals) {
+        var roundedNumber = new Number(number + '').toFixed(parseInt(decimals));
+        return parseFloat(roundedNumber);
+    }
+    checkValue(value){
+        if(isNaN(value) || value === Infinity) return "Ошибка!";
+        else return value;
     }
 
     clearCurrentOpertand() {
         this.currentOperand = '';
+        this.updateDisplay();
     }
 
     clear() {
@@ -32,103 +47,217 @@ class Calculator {
         this.previousOperand = '';
         this.operation = undefined;
         this.resetStatus = false;
+        this.updateDisplay();
     }
 
     delete() {
-        this.currentOperand = this.currentOperand.toString().slice(0, -1);
-    }
-
-    addNumber(number) {
-        if (number === '.' && this.currentOperand.includes('.')) return;
-        this.currentOperand = this.currentOperand.toString() + number.toString();
-    }
-
-    chooseOperation(operation) {
-        if (this.currentOperand === '' && this.operation !== '√' && this.operation != '1/x') {
-            return;
+        if(!isNaN(this.currentOperand)){
+            this.currentOperand = this.currentOperand.toString().slice(0, -1);
+            this.updateDisplay();
         }
-        if (this.previousOperand !== '') {
-            this.calculate();
-        }
-        this.operation = operation;
-        this.previousOperand = this.currentOperand;
-        this.currentOperand = '';
     }
 
     changeSign() {
-        if (this.currentOperand !== '') {
-            if (!this.currentOperand.includes('-'))
+        if (this.currentOperand !== '' && !isNaN(this.currentOperand) && this.currentOperand !== '0') {
+            if (!this.currentOperand.toString().includes('-'))
                 this.currentOperand = '-' + this.currentOperand;
             else this.currentOperand = this.currentOperand.replace('-', '');
         }
+        this.updateDisplay();
     }
 
-    roundNumber(number, decimals) {
-        var roundedNumber = new Number(number+'').toFixed(parseInt(decimals));
-        return parseFloat(roundedNumber); 
+    addDot(num) {
+        if (this.currentOperand.includes('.')) return;
+        if (this.currentOperand == null || this.currentOperand == '') {
+            this.currentOperand = '0.';
+        }
+        else if (!isNaN(this.currentOperand)) this.currentOperand = this.currentOperand.toString() + '.';
+        this.updateDisplay();
     }
 
-    calculate() {
-        let result;
+    addNumber(number) {
+        if (this.currentOperand[0] == '0' && !this.currentOperand.includes('.')) {
+            if (number != '0'){
+                this.currentOperand = number;
+                return;
+            }
+            else return;
+        }
+        if(isNaN(this.currentOperand)) return;
+        this.currentOperand = this.currentOperand.toString() + number.toString();
+        this.updateDisplay();
+    }
+
+    chooseOperation(operation) {
+        if (this.currentOperand == '' || isNaN(this.currentOperand)) {
+            return;
+        }
+        else {
+            if (this.previousOperand !== '') {
+                this.calculate(operation);
+            }
+        }
+        this.operation = operation;
+        this.previousOperand = this.roundNumber(this.currentOperand, 12); //remove extra zeros in decimal numbers
+        this.currentOperand = '';
+    
+        this.updateDisplay();
+    }
+
+    calculate(operation) {
         const previosVariable = parseFloat(this.previousOperand);
         const currentVaribale = parseFloat(this.currentOperand);
-        if (isNaN(previosVariable) || (isNaN(currentVaribale) && this.operation != '1/x' &&
-            this.operation != '√')) return;
+
+        if (isNaN(previosVariable) || isNaN(currentVaribale)) return; //если предыдущее значение или текущее не число или пустое
+
         switch (this.operation) {
             case '+':
-                result = previosVariable + currentVaribale;
+                this.result = previosVariable + currentVaribale;
                 break;
             case '-':
-                result = previosVariable - currentVaribale;
+                this.result = previosVariable - currentVaribale;
                 break;
             case '*':
-                result = previosVariable * currentVaribale;
+                this.result = previosVariable * currentVaribale;
                 break;
-            case '÷':
-                result = previosVariable / currentVaribale;
+            case '/':
+                this.result = previosVariable / currentVaribale;
+                break;
+            case '^':
+                this.result = Math.pow(previosVariable, currentVaribale);
+                break;
+
+            case '√':
+                this.result = Math.sqrt(currentVaribale);
+                return;
+            case '1/':
+                this.result = 1 / currentVaribale;
+                return;
+            case '%':
+                this.result = currentVaribale / 100;
+                return;
+
+            default:
+                return;
+        }
+        this.setResult();
+        this.updateDisplay();
+    }
+
+    calculatePriorityOperation(priorityOperation){
+        
+        const currentVaribale = parseFloat(this.currentOperand);
+
+        if (isNaN(currentVaribale)) return;
+        
+        switch(priorityOperation){
+            case '√':
+                this.result =  Math.sqrt(this.currentOperand);
+                break;
+            case '1/':
+                this.result = 1 / this.currentOperand;
                 break;
             case '%':
-                result = currentVaribale * previosVariable / 100;
-                break;
-            case '1/x':
-                result = 1 / previosVariable;
-                break;
-            case '√':
-                if (previosVariable.toString().includes('-') == true) {
-                    result = 'Ошибка!';
-                    break;
-                }
-                result = Math.sqrt(previosVariable);
-                break;
-            case '^x':
-                result = Math.pow(previosVariable, currentVaribale);
+                this.result = this.currentOperand / 100;
                 break;
             default:
                 return;
         }
-        result = this.roundNumber(result,12);
+
+        const currentOperandTextElement = document.querySelector('[current-operand]');
+        const previousOperandTextElement = document.querySelector('[previous-operand]');
+        
+        if(this.operation !=undefined){
+            previousOperandTextElement.innerText = `${this.previousOperand}${this.operation}${priorityOperation}${this.currentOperand}`;
+        }
+        else{
+            previousOperandTextElement.innerText = `${priorityOperation}${this.currentOperand}`;
+        }
+        
+        this.currentOperand = this.checkValue(this.roundNumber(this.result, 12));
+        currentOperandTextElement.innerText = this.currentOperand;
+    }
+
+    setResult() {
         this.resetStatus = true;
-        this.currentOperand = result;
+        this.currentOperand = this.checkValue(this.roundNumber(this.result, 12));
         this.operation = undefined;
         this.previousOperand = '';
     }
 
     updateDisplay() {
-        this.currentOperandTextElement.innerText = this.currentOperand;
-        if (this.operation != null) {
-            if (this.operation == '√')
-                this.previousOperandTextElement.innerText = `${this.operation} ${this.previousOperand}`;
-            else if (this.operation == '1/x')
-                this.previousOperandTextElement.innerText = `1/${this.previousOperand}`;
-            else if (this.operation == '^x')
-                this.previousOperandTextElement.innerText = `${this.previousOperand}^`;
-            else if (this.operation == '%')
-                this.previousOperandTextElement.innerText = `percentage of the number ${this.previousOperand}`
-            else
-                this.previousOperandTextElement.innerText = `${this.previousOperand} ${this.operation}`;
+        const previousOperandTextElement = document.querySelector('[previous-operand]');
+        const currentOperandTextElement = document.querySelector('[current-operand]');
+
+        currentOperandTextElement.innerText = this.currentOperand;
+
+        if (this.operation != undefined) {
+            previousOperandTextElement.innerText = `${this.previousOperand} ${this.operation}`;
         }
         else {
-            this.previousOperandTextElement.innerText = '';
+            previousOperandTextElement.innerText = '';
         }
     }
+
+    listeners() {
+        const numberButtons = document.querySelectorAll('[number]');
+        const dotButton = document.querySelector('[dot]')
+        const operationButtons = document.querySelectorAll('[operation]');
+        const equalsButton = document.querySelector('[equals]');
+
+        const deleteButton = document.querySelector('[delete]');
+        const clearAllButton = document.querySelector('[clear-all]');
+        const clearCurrentOperandButton = document.querySelector('[clear-current-operand]');
+
+        const signButton = document.querySelector('[sign]');
+
+        const priorityOperationButtons = document.querySelectorAll('[priority-operation]');
+
+        priorityOperationButtons.forEach(button =>{
+            button.addEventListener('click',()=>{
+                this.calculatePriorityOperation(button.innerText);
+            })
+        })
+       
+        operationButtons.forEach(button => {
+            button.addEventListener('click', () => {
+                calculator.chooseOperation(button.innerText);
+            })
+        })
+        
+        numberButtons.forEach(button => {
+            button.addEventListener('click', () => {
+                if (calculator.previousOperand === "" && calculator.currentOperand !== "" && calculator.resetStatus) {
+                    calculator.currentOperand = "";
+                    calculator.resetStatus = false;
+                }
+                calculator.addNumber(button.innerText);
+            })
+        })
+
+        equalsButton.addEventListener('click', button => {
+            calculator.calculate();
+        })
+
+        clearAllButton.addEventListener('click', button => {
+            calculator.clear();
+        })
+
+        clearCurrentOperandButton.addEventListener('click', button => {
+            calculator.clearCurrentOpertand();
+        })
+
+        deleteButton.addEventListener('click', button => {
+            calculator.delete();
+        })
+
+        signButton.addEventListener('click', button => {
+            calculator.changeSign();
+        })
+
+        dotButton.addEventListener('click', button => {
+            calculator.addDot();
+        })
+    }
 }
+
