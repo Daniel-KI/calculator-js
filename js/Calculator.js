@@ -39,7 +39,6 @@ class Calculator {
 
     clearCurrentOpertand() {
         this.currentOperand = '';
-        this.updateDisplay();
     }
 
     clear() {
@@ -47,13 +46,11 @@ class Calculator {
         this.previousOperand = '';
         this.operation = undefined;
         this.resetStatus = false;
-        this.updateDisplay();
     }
 
     delete() {
         if(!isNaN(this.currentOperand)){
             this.currentOperand = this.currentOperand.toString().slice(0, -1);
-            this.updateDisplay();
         }
     }
 
@@ -63,7 +60,6 @@ class Calculator {
                 this.currentOperand = '-' + this.currentOperand;
             else this.currentOperand = this.currentOperand.replace('-', '');
         }
-        this.updateDisplay();
     }
 
     addDot(num) {
@@ -72,7 +68,6 @@ class Calculator {
             this.currentOperand = '0.';
         }
         else if (!isNaN(this.currentOperand)) this.currentOperand = this.currentOperand.toString() + '.';
-        this.updateDisplay();
     }
 
     addNumber(number) {
@@ -85,7 +80,6 @@ class Calculator {
         }
         if(isNaN(this.currentOperand)) return;
         this.currentOperand = this.currentOperand.toString() + number.toString();
-        this.updateDisplay();
     }
 
     chooseOperation(operation) {
@@ -100,8 +94,6 @@ class Calculator {
         this.operation = operation;
         this.previousOperand = this.roundNumber(this.currentOperand, 12); //remove extra zeros in decimal numbers
         this.currentOperand = '';
-    
-        this.updateDisplay();
     }
 
     calculate(operation) {
@@ -141,7 +133,6 @@ class Calculator {
                 return;
         }
         this.setResult();
-        this.updateDisplay();
     }
 
     calculatePriorityOperation(priorityOperation){
@@ -222,6 +213,7 @@ class Calculator {
         operationButtons.forEach(button => {
             button.addEventListener('click', () => {
                 calculator.chooseOperation(button.innerText);
+                calculator.updateDisplay();
             })
         })
         
@@ -232,31 +224,38 @@ class Calculator {
                     calculator.resetStatus = false;
                 }
                 calculator.addNumber(button.innerText);
+                calculator.updateDisplay();
             })
         })
 
         equalsButton.addEventListener('click', button => {
             calculator.calculate();
+            calculator.updateDisplay();
         })
 
         clearAllButton.addEventListener('click', button => {
             calculator.clear();
+            calculator.updateDisplay();
         })
 
         clearCurrentOperandButton.addEventListener('click', button => {
             calculator.clearCurrentOpertand();
+            calculator.updateDisplay();
         })
 
         deleteButton.addEventListener('click', button => {
             calculator.delete();
+            calculator.updateDisplay();
         })
 
         signButton.addEventListener('click', button => {
             calculator.changeSign();
+            calculator.updateDisplay();
         })
 
         dotButton.addEventListener('click', button => {
             calculator.addDot();
+            calculator.updateDisplay();
         })
     }
 }
