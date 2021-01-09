@@ -2,8 +2,8 @@
 Class Calculator
 
 method clearCurrentOpertand() -> Clear last entered value
-method clear() -> Clear all entered values
-method delete() -> Delete last entered value
+method clear() -> Clear all values
+method delete() -> Delete last entered number
 
 method addDot() -> Add dot to current value
 method addNumber() -> Add number to current value
@@ -11,8 +11,14 @@ method chooseOperation() -> Check entered basic operation
 method changeSign() -> Change sign of entered value (+/-)
 
 method calculate() -> Calculate result
-method roundNumber() -> Round result to chosen decimals (solves problems with decimal)
+methid calculatePriorityOperation(priorityOperation) -> Calculate priority operation
+method setResult() -> Set result
+
+method roundNumber(number, decimals) -> Round result to chosen decimals (solves problems with decimal)
+method checkValue(value) -> Check for NaN or Infinity
 method updateDisplay() -> Display values on page
+
+method listeners() -> Event handling
 */
 
 class Calculator {
