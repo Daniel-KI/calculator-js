@@ -34,8 +34,8 @@ class Calculator {
         this.clear();
     }
 
-    roundNumber(number, decimals) {
-        var roundedNumber = new Number(number + '').toFixed(parseInt(decimals));
+    roundNumber(value, decimals) {
+        var roundedNumber = new Number(value + '').toFixed(parseInt(decimals));
         return parseFloat(roundedNumber);
     }
     checkValue(value){
@@ -68,7 +68,7 @@ class Calculator {
         }
     }
 
-    addDot(num) {
+    addDot() {
         if (this.currentOperand.includes('.')) return;
         if (this.currentOperand == null || this.currentOperand == '') {
             this.currentOperand = '0.';
